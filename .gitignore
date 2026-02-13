@@ -21,3 +21,6 @@ apps/web/dist
 
 # misc
 .DS_Store
+
+# local scratch
+.tmp_*
