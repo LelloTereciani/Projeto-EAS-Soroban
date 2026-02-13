@@ -174,8 +174,6 @@ No VPS, o necessario e **somente infra** (sem precisar instalar Node/Rust/stella
 - Proxy por `location` no arquivo `/root/RWAImob/infra/edge-proxy/nginx/conf.d/default.conf`
 - Rede docker `edge` externa
 
-Isso segue o padrao que voce ja usa no dominio.
-
 O `docker-compose.prod.yml` deste repo ja esta preparado para entrar na rede `edge` e expor aliases:
 
 - `eas-frontend` (porta 3000)
