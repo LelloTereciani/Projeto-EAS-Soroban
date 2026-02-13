@@ -361,25 +361,24 @@ export default function App() {
                 <label>Subject</label>
                 <input value={subjectAddr} onChange={(e) => setSubjectAddr(e.target.value)} placeholder="G..." />
               </div>
-              <div style={{ alignSelf: 'end' }}>
-                <button
-                  onClick={async () => {
-                    setToast(null);
-                    setSubjectList(null);
-                    try {
-                      const out = await jfetch(`/subjects/${subjectAddr}/attestations`);
-                      setSubjectList(out);
-                      setToast({ kind: 'ok', msg: 'OK' });
-                    } catch (e: any) {
-                      setToast({ kind: 'err', msg: `Erro: ${e.message}` });
-                    } finally {
-                      clearToastSoon();
-                    }
-                  }}
-                >
-                  Buscar
-                </button>
-              </div>
+              <button
+                style={{ alignSelf: 'end' }}
+                onClick={async () => {
+                  setToast(null);
+                  setSubjectList(null);
+                  try {
+                    const out = await jfetch(`/subjects/${subjectAddr}/attestations`);
+                    setSubjectList(out);
+                    setToast({ kind: 'ok', msg: 'OK' });
+                  } catch (e: any) {
+                    setToast({ kind: 'err', msg: `Erro: ${e.message}` });
+                  } finally {
+                    clearToastSoon();
+                  }
+                }}
+              >
+                Buscar
+              </button>
             </div>
             {subjectList && (
               <div className="small">
