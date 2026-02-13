@@ -1,0 +1,217 @@
+:root {
+  color-scheme: dark;
+  --bg0: #0b0f1a;
+  --bg1: #0f172a;
+  --card: rgba(17, 24, 39, 0.88);
+  --border: rgba(148, 163, 184, 0.18);
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #7dd3fc;
+  --accent2: #93c5fd;
+  --danger: #fb7185;
+  --ok: #34d399;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:
+    radial-gradient(900px 600px at 18% 12%, rgba(56, 189, 248, 0.10) 0%, transparent 60%),
+    radial-gradient(900px 600px at 88% 18%, rgba(167, 139, 250, 0.08) 0%, transparent 55%),
+    radial-gradient(700px 500px at 50% 90%, rgba(52, 211, 153, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg0), #070a12 60%, #06070c);
+  color: var(--text);
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+  padding: 28px 0 64px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 18px 8px;
+}
+
+.headerLinks {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.linkPill {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.20);
+  background: rgba(2, 6, 23, 0.25);
+  color: var(--accent2);
+  font-size: 12px;
+  text-decoration: none;
+}
+.linkPill:hover { text-decoration: none; border-color: rgba(125, 211, 252, 0.55); }
+
+h1 {
+  margin: 0;
+  font-size: clamp(22px, 3vw, 34px);
+  letter-spacing: 0.4px;
+}
+
+.subtitle { color: var(--muted); font-size: 13px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+  padding: 0 18px;
+}
+
+.card {
+  grid-column: span 12;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+}
+
+@media (min-width: 960px) {
+  .card.half { grid-column: span 6; }
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .row.cols2 { grid-template-columns: 1fr 1fr; }
+  .row.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.20);
+  background: rgba(2, 6, 23, 0.55);
+  color: var(--text);
+  outline: none;
+}
+
+textarea { min-height: 110px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+button {
+  border: 1px solid rgba(125, 211, 252, 0.30);
+  background: rgba(125, 211, 252, 0.12);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+button:hover { border-color: rgba(125, 211, 252, 0.55); }
+
+button.danger {
+  border-color: rgba(251, 113, 133, 0.35);
+  background: rgba(251, 113, 133, 0.10);
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px dashed rgba(148, 163, 184, 0.16);
+}
+
+.kv:first-child { border-top: none; }
+
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.20);
+  color: var(--accent2);
+  font-size: 11px;
+}
+
+.toast {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(2, 6, 23, 0.55);
+}
+.toast.ok { border-color: rgba(52, 211, 153, 0.35); }
+.toast.err { border-color: rgba(251, 113, 133, 0.35); }
+
+.repoList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .repoList { grid-template-columns: 1fr 1fr; }
+}
+
+.repoItem {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(2, 6, 23, 0.30);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.repoTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.repoMeta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.repoBadge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}

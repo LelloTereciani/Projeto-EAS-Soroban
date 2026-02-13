@@ -1,0 +1,23 @@
+# env
+.env
+.env.*
+!.env.example
+
+# node
+node_modules
+
+# build
+apps/api/dist
+apps/web/dist
+
+# rust
+**/target
+
+# soroban sdk test snapshots (very noisy with proptest)
+**/test_snapshots
+
+# logs
+*.log
+
+# misc
+.DS_Store

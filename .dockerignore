@@ -1,0 +1,18 @@
+# Keep Docker build context small (compose builds from repo root).
+.git
+.gitignore
+
+node_modules
+**/node_modules
+
+apps/*/dist
+**/dist
+
+**/target
+**/test_snapshots
+
+contracts
+infra
+
+*.log
+.DS_Store

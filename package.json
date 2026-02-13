@@ -1,0 +1,29 @@
+{
+  "name": "project-eas-soroban",
+  "private": true,
+  "packageManager": "pnpm@10.14.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "api:dev": "pnpm --filter @eas/api dev",
+    "api:build": "pnpm --filter @eas/api build",
+    "web:dev": "pnpm --filter @eas/web dev",
+    "web:build": "pnpm --filter @eas/web build",
+    "docker:build": "docker compose -f docker-compose.prod.yml build",
+    "docker:up": "docker compose -f docker-compose.prod.yml up -d",
+    "docker:down": "docker compose -f docker-compose.prod.yml down",
+    "accounts:gen": "node apps/api/scripts/gen-accounts.mjs",
+    "accounts:fund": "node apps/api/scripts/fund-accounts.mjs",
+    "docker:build:local": "docker compose -f docker-compose.local.yml build",
+    "docker:up:local": "docker compose -f docker-compose.local.yml up -d",
+    "docker:down:local": "docker compose -f docker-compose.local.yml down"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
