@@ -30,34 +30,15 @@ Configuracao:
 - `docker-compose.local.yml`: sobe tudo local com proxy em `http://localhost:8080`
 - `docker-compose.prod.yml`: compose pensado para VPS (rede docker `edge` externa)
 
-## Requisitos ✅
+## Requisitos (local dev) ✅
+
+Para rodar no VPS: veja a secao **"VPS / Producao (quando for subir)"** (no servidor fica basicamente **Docker/Compose + Nginx edge-proxy**).
 
 - Docker + Docker Compose
 - Node 22+
 - pnpm (via corepack)
 - Rust + Cargo
 - `stellar` CLI (voce ja tem `stellar 23.3.0` instalado)
-
-### Sobre seu erro no `cargo install` 🧯
-
-Voce tentou:
-
-```bash
-cargo install stellar-cli 25.1.0
-```
-
-Isso falha por 2 motivos:
-
-1. A sintaxe correta para versao e `--version`.
-2. Voce ja tem um binario `stellar` (do `soroban-cli v23.3.0`), entao precisa `--force` se quiser sobrescrever.
-
-Se voce realmente quiser instalar a `stellar-cli 25.1.0`, o comando correto e:
-
-```bash
-cargo install stellar-cli --version 25.1.0 --locked --force
-```
-
-Dito isso: **nao e obrigatorio** para rodar este MVP (estamos usando o `stellar 23.3.0`).
 
 ## Quickstart local (rodando de verdade) 🚀
 
@@ -186,11 +167,14 @@ O pacote `contracts/eas/src/security_tests.rs` inclui testes **property-based** 
 
 ## VPS / Producao (quando for subir) 🧰
 
-Seu VPS ja usa o padrao:
+No VPS, o necessario e **somente infra** (sem precisar instalar Node/Rust/stellar na maquina):
 
-- Nginx roda em container (`edge-proxy-nginx-1`)
+- Docker + Docker Compose
+- Nginx rodando em container (`edge-proxy-nginx-1`)
 - Proxy por `location` no arquivo `/root/RWAImob/infra/edge-proxy/nginx/conf.d/default.conf`
 - Rede docker `edge` externa
+
+Isso segue o padrao que voce ja usa no dominio.
 
 O `docker-compose.prod.yml` deste repo ja esta preparado para entrar na rede `edge` e expor aliases:
 
@@ -225,16 +209,12 @@ location /EAS {
 }
 ```
 
-## Segurança (lembrete) 🔒
+### Seguranca (VPS) 🔒
 
 - ⚠️ As secrets no `.env` sao **TESTNET ONLY**.
 - 🚫 Nao comite `.env`.
 - ✅ No VPS, mantenha somente `80/443/22` expostos e Postgres apenas na rede docker.
 
-## Onde estamos agora? 📍
+## Autor 📍
 
-- ✅ Contrato buildando e com testes OK
-- ✅ `.env` gerado, contas fundadas via faucet
-- ✅ Contrato ja foi deployado na Testnet (preencha/valide `SOROBAN_CONTRACT_ID`)
-- ✅ Stack local sobe em `http://localhost:8080/EAS/`
-- ⏭️ Proximo: subir a mesma stack no VPS e trocar o placeholder do `/EAS` pelo app real
+- ✅ Wesley Rodigues Tereciani - Desenvolvedor Web 3 - Fullstack
