@@ -105,10 +105,11 @@ export default function App() {
           .filter((r) => !r.archived)
           .filter((r) => (r.owner?.login ? r.owner.login.toLowerCase() === String(GITHUB_USERNAME).toLowerCase() : true))
           .sort((a, b) => String(b.pushed_at || '').localeCompare(String(a.pushed_at || '')));
+        const top = onlyPublic.slice(0, 12);
 
         if (!cancelled) {
-          setGhRepos(onlyPublic);
-          localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), repos: onlyPublic }));
+          setGhRepos(top);
+          localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), repos: top }));
         }
       } catch (e: any) {
         if (!cancelled) setGhError(e?.message ? String(e.message) : 'Falha ao buscar repos do GitHub');
@@ -417,7 +418,8 @@ export default function App() {
           <h2>Projetos Publicos (GitHub)</h2>
           <div className="row">
             <div className="small">
-              Fonte: GitHub API. Mostra somente repos publicos, nao-archived e nao-fork, de autoria de <span className="pill">@{GITHUB_USERNAME}</span>.
+              Fonte: GitHub API. Mostra somente repos publicos, nao-archived e nao-fork, de autoria de <span className="pill">@{GITHUB_USERNAME}</span>.{' '}
+              <a href={`https://github.com/${encodeURIComponent(GITHUB_USERNAME)}?tab=repositories`} target="_blank" rel="noreferrer">Ver todos</a>.
             </div>
             {ghLoading && <div className="small">Carregando lista...</div>}
             {ghError && <div className="toast err">Erro GitHub: {ghError}</div>}
