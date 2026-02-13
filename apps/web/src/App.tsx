@@ -1,24 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 const API_BASE = '/EAS/api';
-const GITHUB_USERNAME = (import.meta as any)?.env?.VITE_GITHUB_USERNAME || 'LelloTereciani';
 
 type Toast = { kind: 'ok' | 'err'; msg: string } | null;
-
-type GitHubRepo = {
-  id: number;
-  name: string;
-  full_name: string;
-  html_url: string;
-  description: string | null;
-  fork: boolean;
-  private: boolean;
-  archived: boolean;
-  language: string | null;
-  stargazers_count: number;
-  pushed_at: string | null;
-  owner?: { login?: string };
-};
 
 async function jfetch(path: string, init?: RequestInit) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -45,10 +29,6 @@ function pretty(v: unknown) {
 export default function App() {
   const [toast, setToast] = useState<Toast>(null);
 
-  const [ghLoading, setGhLoading] = useState(false);
-  const [ghError, setGhError] = useState<string | null>(null);
-  const [ghRepos, setGhRepos] = useState<GitHubRepo[] | null>(null);
-
   const [schemaUri, setSchemaUri] = useState('ipfs://Qm.../schema.json');
   const [schemaRevocable, setSchemaRevocable] = useState(true);
   const [schemaExpiresAllowed, setSchemaExpiresAllowed] = useState(false);
@@ -71,59 +51,6 @@ export default function App() {
 
   const clearToastSoon = () => setTimeout(() => setToast(null), 3500);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadRepos() {
-      setGhError(null);
-      setGhLoading(true);
-
-      try {
-        const cacheKey = `eas_gh_repos_${GITHUB_USERNAME}`;
-        const cachedRaw = localStorage.getItem(cacheKey);
-        if (cachedRaw) {
-          const cached = JSON.parse(cachedRaw) as { ts: number; repos: GitHubRepo[] };
-          if (cached?.ts && Array.isArray(cached?.repos) && Date.now() - cached.ts < 30 * 60 * 1000) {
-            if (!cancelled) setGhRepos(cached.repos);
-            return;
-          }
-        }
-
-        const url = `https://api.github.com/users/${encodeURIComponent(GITHUB_USERNAME)}/repos?type=owner&sort=updated&per_page=100`;
-        const res = await fetch(url, {
-          headers: {
-            accept: 'application/vnd.github+json'
-          }
-        });
-        if (!res.ok) {
-          throw new Error(`GitHub HTTP ${res.status}`);
-        }
-        const repos = (await res.json()) as GitHubRepo[];
-        const onlyPublic = repos
-          .filter((r) => !r.private)
-          .filter((r) => !r.fork)
-          .filter((r) => !r.archived)
-          .filter((r) => (r.owner?.login ? r.owner.login.toLowerCase() === String(GITHUB_USERNAME).toLowerCase() : true))
-          .sort((a, b) => String(b.pushed_at || '').localeCompare(String(a.pushed_at || '')));
-        const top = onlyPublic.slice(0, 12);
-
-        if (!cancelled) {
-          setGhRepos(top);
-          localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), repos: top }));
-        }
-      } catch (e: any) {
-        if (!cancelled) setGhError(e?.message ? String(e.message) : 'Falha ao buscar repos do GitHub');
-      } finally {
-        if (!cancelled) setGhLoading(false);
-      }
-    }
-
-    loadRepos();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const toastEl = useMemo(() => {
     if (!toast) return null;
     return <div className={`toast ${toast.kind}`}>{toast.msg}</div>;
@@ -137,16 +64,6 @@ export default function App() {
           <div className="subtitle">
             BasePath: <span className="pill">/EAS</span> API: <span className="pill">/EAS/api</span>
           </div>
-        </div>
-        <div className="headerLinks">
-          <a
-            className="linkPill"
-            href={`https://github.com/${encodeURIComponent(GITHUB_USERNAME)}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub: @{GITHUB_USERNAME}
-          </a>
         </div>
       </div>
 
@@ -411,39 +328,6 @@ export default function App() {
             </button>
             <div className="small">Dica: a lista vem do Postgres (indexer + inserts do API).</div>
             {toastEl}
-          </div>
-        </div>
-
-        <div className="card">
-          <h2>Projetos Publicos (GitHub)</h2>
-          <div className="row">
-            <div className="small">
-              Fonte: GitHub API. Mostra somente repos publicos, nao-archived e nao-fork, de autoria de <span className="pill">@{GITHUB_USERNAME}</span>.{' '}
-              <a href={`https://github.com/${encodeURIComponent(GITHUB_USERNAME)}?tab=repositories`} target="_blank" rel="noreferrer">Ver todos</a>.
-            </div>
-            {ghLoading && <div className="small">Carregando lista...</div>}
-            {ghError && <div className="toast err">Erro GitHub: {ghError}</div>}
-            {ghRepos && (
-              <div className="repoList">
-                {ghRepos.map((r) => (
-                  <div className="repoItem" key={r.id}>
-                    <div className="repoTop">
-                      <a href={r.html_url} target="_blank" rel="noreferrer">
-                        {r.name}
-                      </a>
-                      <div className="repoMeta">
-                        {typeof r.stargazers_count === 'number' && r.stargazers_count > 0 ? (
-                          <span className="repoBadge">★ {r.stargazers_count}</span>
-                        ) : null}
-                        {r.language ? <span className="repoBadge">{r.language}</span> : null}
-                      </div>
-                    </div>
-                    {r.description ? <div className="small">{r.description}</div> : null}
-                  </div>
-                ))}
-              </div>
-            )}
-            {ghRepos && ghRepos.length === 0 && <div className="small">Nenhum repo publico encontrado.</div>}
           </div>
         </div>
       </div>

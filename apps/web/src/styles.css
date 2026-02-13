@@ -42,25 +42,6 @@ a:hover { text-decoration: underline; }
   padding: 18px 18px 8px;
 }
 
-.headerLinks {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.linkPill {
-  display: inline-block;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.20);
-  background: rgba(2, 6, 23, 0.25);
-  color: var(--accent2);
-  font-size: 12px;
-  text-decoration: none;
-}
-.linkPill:hover { text-decoration: none; border-color: rgba(125, 211, 252, 0.55); }
-
 h1 {
   margin: 0;
   font-size: clamp(22px, 3vw, 34px);
@@ -175,44 +156,3 @@ button.danger {
 }
 .toast.ok { border-color: rgba(52, 211, 153, 0.35); }
 .toast.err { border-color: rgba(251, 113, 133, 0.35); }
-
-.repoList {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-@media (min-width: 720px) {
-  .repoList { grid-template-columns: 1fr 1fr; }
-}
-
-.repoItem {
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  background: rgba(2, 6, 23, 0.30);
-  border-radius: 14px;
-  padding: 12px;
-}
-
-.repoTop {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.repoMeta {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.repoBadge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  color: var(--muted);
-  font-size: 11px;
-  white-space: nowrap;
-}
