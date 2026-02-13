@@ -357,7 +357,7 @@ export default function App() {
         <div className="card">
           <h2>5) Listar Atestacoes por Subject</h2>
           <div className="row">
-            <div className="row cols2">
+            <div className="row cols1auto">
               <div>
                 <label>Subject</label>
                 <input value={subjectAddr} onChange={(e) => setSubjectAddr(e.target.value)} placeholder="G..." />
