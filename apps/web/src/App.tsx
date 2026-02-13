@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 const API_BASE = '/EAS/api';
-const GITHUB_USERNAME = (import.meta as any)?.env?.VITE_GITHUB_USERNAME || 'lello';
+const GITHUB_USERNAME = (import.meta as any)?.env?.VITE_GITHUB_USERNAME || 'LelloTereciani';
 
 type Toast = { kind: 'ok' | 'err'; msg: string } | null;
 

@@ -19,6 +19,7 @@ A home do `/EAS/` mostra um link para o seu GitHub e lista automaticamente os **
 Configuracao:
 
 - `VITE_GITHUB_USERNAME` (opcional): username do GitHub (default: `lello`)
+  - Default atual: `LelloTereciani`
 
 ## Estrutura do repo 📦
 
