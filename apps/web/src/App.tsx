@@ -71,9 +71,6 @@ export default function App() {
       <div className="header">
         <div>
           <h1>EAS Soroban (MVP)</h1>
-          <div className="subtitle">
-            BasePath: <span className="pill">/EAS</span> API: <span className="pill">/EAS/api</span>
-          </div>
         </div>
       </div>
 
