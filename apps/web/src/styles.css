@@ -1,15 +1,32 @@
 :root {
+  /* Default theme: dark. App toggles by setting <html data-theme="...">. */
   color-scheme: dark;
-  --bg0: #0b0f1a;
-  --bg1: #0f172a;
-  --card: rgba(17, 24, 39, 0.88);
-  --border: rgba(148, 163, 184, 0.18);
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --accent: #7dd3fc;
-  --accent2: #93c5fd;
+  --bg0: #060b12;
+  --bg1: #0b1220;
+  --card: rgba(8, 15, 28, 0.82);
+  --border: rgba(34, 197, 94, 0.16);
+  --text: #e7f4ee;
+  --muted: rgba(231, 244, 238, 0.70);
+  --accent: #34d399;   /* emerald */
+  --accent2: #5eead4;  /* teal */
   --danger: #fb7185;
   --ok: #34d399;
+  --controlBg: rgba(4, 10, 20, 0.60);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg0: #f6fbf8;
+  --bg1: #ecfdf5;
+  --card: rgba(255, 255, 255, 0.86);
+  --border: rgba(16, 185, 129, 0.22);
+  --text: #0b1220;
+  --muted: rgba(11, 18, 32, 0.62);
+  --accent: #059669;
+  --accent2: #0f766e;
+  --danger: #e11d48;
+  --ok: #16a34a;
+  --controlBg: rgba(255, 255, 255, 0.80);
 }
 
 * { box-sizing: border-box; }
@@ -18,10 +35,10 @@ body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background:
-    radial-gradient(900px 600px at 18% 12%, rgba(56, 189, 248, 0.10) 0%, transparent 60%),
-    radial-gradient(900px 600px at 88% 18%, rgba(167, 139, 250, 0.08) 0%, transparent 55%),
-    radial-gradient(700px 500px at 50% 90%, rgba(52, 211, 153, 0.08) 0%, transparent 55%),
-    linear-gradient(180deg, var(--bg0), #070a12 60%, #06070c);
+    radial-gradient(900px 650px at 14% 14%, rgba(52, 211, 153, 0.14) 0%, transparent 62%),
+    radial-gradient(900px 650px at 88% 18%, rgba(94, 234, 212, 0.10) 0%, transparent 55%),
+    radial-gradient(800px 520px at 50% 94%, rgba(34, 197, 94, 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1) 60%, var(--bg0));
   color: var(--text);
 }
 
@@ -106,24 +123,35 @@ input, textarea, select {
   width: 100%;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(148, 163, 184, 0.20);
-  background: rgba(2, 6, 23, 0.55);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+  background: var(--controlBg);
   color: var(--text);
   outline: none;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: rgba(52, 211, 153, 0.55);
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.12);
 }
 
 textarea { min-height: 110px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
 button {
-  border: 1px solid rgba(125, 211, 252, 0.30);
-  background: rgba(125, 211, 252, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.32);
+  background: rgba(52, 211, 153, 0.14);
   color: var(--text);
   border-radius: 999px;
   padding: 10px 14px;
   font-weight: 700;
   cursor: pointer;
 }
-button:hover { border-color: rgba(125, 211, 252, 0.55); }
+button:hover { border-color: rgba(52, 211, 153, 0.58); }
+
+button.themeToggle {
+  padding: 8px 12px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
 
 button.danger {
   border-color: rgba(251, 113, 133, 0.35);
@@ -163,7 +191,7 @@ button.danger {
   display: inline-block;
   padding: 2px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.20);
+  border: 1px solid rgba(16, 185, 129, 0.22);
   color: var(--accent2);
   font-size: 11px;
 }
@@ -182,5 +210,5 @@ button.danger {
   background: rgba(2, 6, 23, 0.55);
   backdrop-filter: blur(10px);
 }
-.toast.ok { border-color: rgba(52, 211, 153, 0.35); }
+.toast.ok { border-color: rgba(52, 211, 153, 0.45); }
 .toast.err { border-color: rgba(251, 113, 133, 0.35); }

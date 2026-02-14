@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const API_BASE = '/EAS/api';
 
@@ -37,6 +37,12 @@ function pretty(v: unknown) {
 export default function App() {
   const [toast, setToast] = useState<Toast>(null);
 
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('eas_theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia?.('(prefers-color-scheme: light)')?.matches ? 'light' : 'dark';
+  });
+
   const [schemaUri, setSchemaUri] = useState('');
   const [schemaRevocable, setSchemaRevocable] = useState(true);
   const [schemaExpiresAllowed, setSchemaExpiresAllowed] = useState(false);
@@ -66,12 +72,24 @@ export default function App() {
     return <div className={`toast ${toast.kind}`}>{toast.msg}</div>;
   }, [toast]);
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('eas_theme', theme);
+  }, [theme]);
+
   return (
     <div className="container">
       <div className="header">
         <div>
           <h1>EAS Soroban (MVP)</h1>
         </div>
+        <button
+          type="button"
+          className="themeToggle"
+          onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+        >
+          Tema: {theme === 'dark' ? 'Escuro' : 'Claro'}
+        </button>
       </div>
 
       {toastEl}

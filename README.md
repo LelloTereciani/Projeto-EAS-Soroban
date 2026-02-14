@@ -6,6 +6,7 @@ Um mini **EAS-like** (Ethereum Attestation Service) rodando na **Soroban / Stell
 - 🧠 **API + Indexer** (Node/TS): consome eventos do contrato e salva no Postgres
 - 🖥️ **Frontend** (React + Vite): UI basica para criar schema, atestar, verificar e revogar
 - 🌐 **Padrao do seu dominio**: tudo por **basePath** em `/_/` estilo `https://portifolio.cloud/EAS/`
+- 🎨 **Tema**: seletor Claro/Escuro no header (persistido no navegador)
 
 ## BasePath (importante!) 🧭
 
