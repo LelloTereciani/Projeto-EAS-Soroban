@@ -151,6 +151,10 @@ No card **"2) Emitir Atestacao"**:
 - **Subject**: endereco `G...` (conta) ou `C...` (contrato)
 - **Mensagem**: digite somente o texto (o frontend envia `{"message":"..."}` como payload)
 
+## Limpar dados (UI) 🧹
+
+No header do frontend existe o botao **"Limpar"**, que reseta os campos e resultados na tela (sem recarregar a pagina).
+
 ## Testes do contrato (seguranca + compliance) 🛡️🧪
 
 Rodar antes de qualquer deploy:

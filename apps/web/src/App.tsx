@@ -77,19 +77,50 @@ export default function App() {
     localStorage.setItem('eas_theme', theme);
   }, [theme]);
 
+  const clearAll = () => {
+    setToast(null);
+
+    setSchemaUri('');
+    setSchemaRevocable(true);
+    setSchemaExpiresAllowed(false);
+    setSchemaAttesterMode('0');
+    setSchemaCreated(null);
+
+    setAttSchemaId('');
+    setAttSubject('');
+    setAttMessage('');
+    setAttCreated(null);
+
+    setLookupId('');
+    setLookupResult(null);
+    setVerifyResult(null);
+
+    setSubjectAddr('');
+    setSubjectList(null);
+
+    setRevokeId('');
+
+    setSchemasList(null);
+  };
+
   return (
     <div className="container">
       <div className="header">
         <div>
           <h1>EAS Soroban (MVP)</h1>
         </div>
-        <button
-          type="button"
-          className="themeToggle"
-          onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-        >
-          Tema: {theme === 'dark' ? 'Escuro' : 'Claro'}
-        </button>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <button type="button" className="themeToggle" onClick={clearAll}>
+            Limpar
+          </button>
+          <button
+            type="button"
+            className="themeToggle"
+            onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+          >
+            Tema: {theme === 'dark' ? 'Escuro' : 'Claro'}
+          </button>
+        </div>
       </div>
 
       {toastEl}
