@@ -51,7 +51,7 @@ export default function App() {
 
   const [attSchemaId, setAttSchemaId] = useState('');
   const [attSubject, setAttSubject] = useState('');
-  const [attPayload, setAttPayload] = useState('{"message":"hello soroban"}');
+  const [attMessage, setAttMessage] = useState('');
   const [attCreated, setAttCreated] = useState<any>(null);
 
   const [lookupId, setLookupId] = useState('');
@@ -154,6 +154,7 @@ export default function App() {
                   setSchemaCreated(out);
                   setAttSchemaId(out.schemaId);
                   setToast({ kind: 'ok', msg: out.existed ? `Schema ja existe: ${out.schemaId}` : `Schema criado: ${out.schemaId}` });
+                  setSchemaUri('');
                 } catch (e: any) {
                   setToast({ kind: 'err', msg: `Erro: ${e.message}` });
                 } finally {
@@ -185,15 +186,25 @@ export default function App() {
               </div>
             </div>
             <div>
-              <label>Payload (JSON) para sha256 off-chain</label>
-              <textarea value={attPayload} onChange={(e) => setAttPayload(e.target.value)} />
+              <label>Mensagem</label>
+              <textarea
+                value={attMessage}
+                placeholder="Digite somente a mensagem (sem JSON)"
+                onChange={(e) => setAttMessage(e.target.value)}
+              />
             </div>
             <button
               onClick={async () => {
                 setToast(null);
                 setAttCreated(null);
                 try {
-                  const payload = JSON.parse(attPayload);
+                  if (!attSchemaId.trim() || !attSubject.trim()) {
+                    throw new Error('Informe Schema ID e Subject.');
+                  }
+                  if (!attMessage.trim()) {
+                    throw new Error('Informe a mensagem.');
+                  }
+                  const payload = { message: attMessage };
                   const out = await jfetch('/attestations', {
                     method: 'POST',
                     body: JSON.stringify({ schemaId: attSchemaId, subject: attSubject, payload, expirationLedger: null })
@@ -202,6 +213,8 @@ export default function App() {
                   setLookupId(out.attestationId);
                   setRevokeId(out.attestationId);
                   setToast({ kind: 'ok', msg: `Atestado: ${out.attestationId}` });
+                  setAttSubject('');
+                  setAttMessage('');
                 } catch (e: any) {
                   setToast({ kind: 'err', msg: `Erro: ${e.message}` });
                 } finally {
@@ -293,6 +306,7 @@ export default function App() {
                 try {
                   await jfetch(`/attestations/${revokeId}/revoke`, { method: 'POST', body: '{}' });
                   setToast({ kind: 'ok', msg: 'Revogado' });
+                  setRevokeId('');
                 } catch (e: any) {
                   setToast({ kind: 'err', msg: `Erro: ${e.message}` });
                 } finally {
@@ -322,6 +336,7 @@ export default function App() {
                     const out = await jfetch(`/subjects/${subjectAddr}/attestations`);
                     setSubjectList(out);
                     setToast({ kind: 'ok', msg: 'OK' });
+                    setSubjectAddr('');
                   } catch (e: any) {
                     setToast({ kind: 'err', msg: `Erro: ${e.message}` });
                   } finally {

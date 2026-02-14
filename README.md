@@ -143,6 +143,14 @@ O que cobre hoje:
 - `apps/api/test/server.test.ts`: rotas principais usando `fastify.inject` (mock de DB e mock do Soroban client)
 - `apps/web/test/App.test.tsx`: renderizacao da UI e fluxo basico de "Criar schema" (mock de `fetch`)
 
+## Como atestar (pela UI) 🧾
+
+No card **"2) Emitir Atestacao"**:
+
+- **Schema ID**: cole o `schemaId` (64 hex) do card 1
+- **Subject**: endereco `G...` (conta) ou `C...` (contrato)
+- **Mensagem**: digite somente o texto (o frontend envia `{"message":"..."}` como payload)
+
 ## Testes do contrato (seguranca + compliance) 🛡️🧪
 
 Rodar antes de qualquer deploy:
