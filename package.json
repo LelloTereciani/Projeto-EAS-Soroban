@@ -8,6 +8,10 @@
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",
+    "test": "pnpm --filter @eas/api test && pnpm --filter @eas/web test",
+    "test:api": "pnpm --filter @eas/api test",
+    "test:web": "pnpm --filter @eas/web test",
+    "test:contracts": "cargo test --manifest-path contracts/eas/Cargo.toml",
     "api:dev": "pnpm --filter @eas/api dev",
     "api:build": "pnpm --filter @eas/api build",
     "web:dev": "pnpm --filter @eas/web dev",

@@ -121,6 +121,27 @@ curl -sS -X POST http://127.0.0.1:8080/EAS/api/attestations \
   -d "{\"schemaId\":\"$SCHEMA_ID\",\"subject\":\"$EAS_DEFAULT_SUBJECT\",\"payload\":{\"hello\":\"world\"},\"expirationLedger\":null}"
 ```
 
+## Testes (API + Web) ✅🧪
+
+Rodar a suite JS (Vitest):
+
+```bash
+pnpm test
+```
+
+Atalhos:
+
+```bash
+pnpm test:api         # somente apps/api
+pnpm test:web         # somente apps/web
+pnpm test:contracts   # somente contrato (cargo test)
+```
+
+O que cobre hoje:
+
+- `apps/api/test/server.test.ts`: rotas principais usando `fastify.inject` (mock de DB e mock do Soroban client)
+- `apps/web/test/App.test.tsx`: renderizacao da UI e fluxo basico de "Criar schema" (mock de `fetch`)
+
 ## Testes do contrato (seguranca + compliance) 🛡️🧪
 
 Rodar antes de qualquer deploy:
@@ -147,7 +168,7 @@ O pacote `contracts/eas/src/security_tests.rs` inclui testes **property-based** 
 - 🧾 Migrar eventos do contrato para `#[contractevent]` (mantendo compatibilidade do indexer com versao de evento).
 - 🧯 Threat model + `SECURITY.md` (riscos, limites, controles operacionais).
 - 🧹 Remover dependencia de secrets no servidor para flows sensiveis (ou isolar em um "signer" separado).
-- 🧪 CI: rodar `cargo fmt --check`, `cargo clippy -D warnings`, `cargo test` e checks do Node no PR.
+- 🧪 CI: rodar `cargo fmt --check`, `cargo clippy -D warnings`, `cargo test` e `pnpm test` no PR.
 
 ### Medio prazo (produto) 🧩
 

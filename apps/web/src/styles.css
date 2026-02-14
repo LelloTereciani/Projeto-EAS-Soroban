@@ -57,6 +57,9 @@ h1 {
   padding: 0 18px;
 }
 
+/* Allow grid children to shrink even when they contain long unbroken strings (hex, hashes, URLs). */
+.grid > * { min-width: 0; }
+
 .card {
   grid-column: span 12;
   background: var(--card);
@@ -64,6 +67,7 @@ h1 {
   border-radius: 16px;
   padding: 16px;
   backdrop-filter: blur(10px);
+  min-width: 0;
 }
 
 @media (min-width: 960px) {
@@ -81,6 +85,9 @@ h1 {
   grid-template-columns: 1fr;
   gap: 10px;
 }
+
+/* Prevent nested grid items from forcing overflow due to min-content sizing. */
+.row > * { min-width: 0; }
 
 @media (min-width: 720px) {
   .row.cols2 { grid-template-columns: 1fr 1fr; }
@@ -126,6 +133,20 @@ button.danger {
 .small {
   font-size: 12px;
   color: var(--muted);
+  min-width: 0;
+}
+
+.small pre {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(2, 6, 23, 0.35);
+  color: var(--text);
+  max-width: 100%;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .kv {
