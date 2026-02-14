@@ -5,6 +5,7 @@ import type pg from 'pg';
 import { z } from 'zod';
 import type { Env } from './env.js';
 import { EasSoroban } from './soroban.js';
+import { sha256Bytes32 } from './soroban.js';
 
 function stableStringify(value: unknown): string {
   if (value === null || value === undefined) return 'null';
@@ -84,11 +85,32 @@ export function buildServer(env: Env, db: pg.Pool, soroban: EasSoroban) {
 
     const body = bodySchema.parse(req.body);
 
-    const { schemaId, schemaUriHash } = await soroban.createSchema(env.EAS_SCHEMA_CREATOR_SECRET, body.schemaUri, {
-      revocable: body.revocable,
-      expiresAllowed: body.expiresAllowed,
-      attesterMode: body.attesterMode
-    });
+    const schemaUriHashHex = sha256Bytes32(body.schemaUri).toString('hex');
+    const schemaId = schemaUriHashHex; // MVP: schema_id == schema_uri_hash
+
+    // If the schema already exists, behave idempotently (contract panics on duplicates).
+    const existing = await db.query('SELECT schema_id, schema_uri_hash FROM schemas WHERE schema_id=$1 LIMIT 1', [schemaId]);
+    if (existing.rowCount && existing.rows[0]) {
+      return { schemaId: existing.rows[0].schema_id, schemaUriHash: existing.rows[0].schema_uri_hash, existed: true };
+    }
+
+    let schemaUriHash = schemaUriHashHex;
+    try {
+      const out = await soroban.createSchema(env.EAS_SCHEMA_CREATOR_SECRET, body.schemaUri, {
+        revocable: body.revocable,
+        expiresAllowed: body.expiresAllowed,
+        attesterMode: body.attesterMode
+      });
+      schemaUriHash = out.schemaUriHash;
+    } catch (e: any) {
+      // If on-chain says "already exists", the DB will usually already have it (API best-effort insert or indexer).
+      const maybe = await db.query('SELECT schema_id, schema_uri_hash FROM schemas WHERE schema_id=$1 LIMIT 1', [schemaId]);
+      if (maybe.rowCount && maybe.rows[0]) {
+        return { schemaId: maybe.rows[0].schema_id, schemaUriHash: maybe.rows[0].schema_uri_hash, existed: true };
+      }
+      // Keep the underlying message to help debugging (no secrets included).
+      return reply.code(502).send({ error: 'create_schema_failed', message: String(e?.message ?? e) });
+    }
 
     // Best-effort insert (indexer will also catch it).
     await db.query(

@@ -33,12 +33,16 @@ describe('<App />', () => {
 
     render(<App />);
 
+    await user.type(
+      screen.getByLabelText('Schema URI (vai virar hash)'),
+      'https://example.com/schema.json'
+    );
+
     // Some React/Vitest setups can mount twice in dev-like mode; click the first match.
     await user.click(screen.getAllByRole('button', { name: 'Criar schema' })[0]);
 
     // Toast
-    const toasts = await screen.findAllByText(/^Schema criado:/);
-    expect(toasts.length).toBeGreaterThan(0);
+    expect(await screen.findByText(/^Schema criado:/)).toBeInTheDocument();
 
     // Response is rendered (pre)
     expect(screen.getByText(/"schemaId":/)).toBeInTheDocument();

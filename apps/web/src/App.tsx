@@ -10,9 +10,17 @@ async function jfetch(path: string, init?: RequestInit) {
     ...init
   });
   const txt = await res.text();
-  const json = txt ? JSON.parse(txt) : null;
+  let json: any = null;
+  try {
+    json = txt ? JSON.parse(txt) : null;
+  } catch {
+    json = null;
+  }
   if (!res.ok) {
-    const msg = json?.error ? String(json.error) : `HTTP ${res.status}`;
+    // Fastify default error shape: { error: 'Internal Server Error', message: '...' }
+    const msg =
+      (json?.message ? String(json.message) : json?.error ? String(json.error) : `HTTP ${res.status}`) ||
+      `HTTP ${res.status}`;
     throw new Error(msg);
   }
   return json;
@@ -29,7 +37,7 @@ function pretty(v: unknown) {
 export default function App() {
   const [toast, setToast] = useState<Toast>(null);
 
-  const [schemaUri, setSchemaUri] = useState('ipfs://Qm.../schema.json');
+  const [schemaUri, setSchemaUri] = useState('');
   const [schemaRevocable, setSchemaRevocable] = useState(true);
   const [schemaExpiresAllowed, setSchemaExpiresAllowed] = useState(false);
   const [schemaAttesterMode, setSchemaAttesterMode] = useState<'0' | '1'>('0');
@@ -67,13 +75,21 @@ export default function App() {
         </div>
       </div>
 
+      {toastEl}
+
       <div className="grid">
         <div className="card half">
           <h2>1) Criar Schema</h2>
           <div className="row">
             <div>
-              <label>Schema URI (vai virar hash)</label>
-              <input value={schemaUri} onChange={(e) => setSchemaUri(e.target.value)} />
+              <label htmlFor="schemaUri">Schema URI (vai virar hash)</label>
+              <input
+                id="schemaUri"
+                value={schemaUri}
+                placeholder="https://seusite.com/schema.json (ou ipfs://...)"
+                onFocus={(e) => e.currentTarget.select()}
+                onChange={(e) => setSchemaUri(e.target.value)}
+              />
             </div>
             <div className="row cols3">
               <div>
@@ -103,6 +119,11 @@ export default function App() {
               onClick={async () => {
                 setToast(null);
                 setSchemaCreated(null);
+                if (!schemaUri.trim()) {
+                  setToast({ kind: 'err', msg: 'Informe uma URL/URI para o schema.' });
+                  clearToastSoon();
+                  return;
+                }
                 try {
                   const out = await jfetch('/schemas', {
                     method: 'POST',
@@ -115,7 +136,7 @@ export default function App() {
                   });
                   setSchemaCreated(out);
                   setAttSchemaId(out.schemaId);
-                  setToast({ kind: 'ok', msg: `Schema criado: ${out.schemaId}` });
+                  setToast({ kind: 'ok', msg: out.existed ? `Schema ja existe: ${out.schemaId}` : `Schema criado: ${out.schemaId}` });
                 } catch (e: any) {
                   setToast({ kind: 'err', msg: `Erro: ${e.message}` });
                 } finally {
@@ -130,7 +151,6 @@ export default function App() {
                 <pre>{pretty(schemaCreated)}</pre>
               </div>
             )}
-            {toastEl}
           </div>
         </div>
 
@@ -180,7 +200,6 @@ export default function App() {
                 <pre>{pretty(attCreated)}</pre>
               </div>
             )}
-            {toastEl}
           </div>
         </div>
 
@@ -240,7 +259,6 @@ export default function App() {
                 <pre>{pretty(verifyResult)}</pre>
               </div>
             )}
-            {toastEl}
           </div>
         </div>
 
@@ -267,7 +285,6 @@ export default function App() {
             >
               Revogar
             </button>
-            {toastEl}
           </div>
         </div>
 
@@ -303,7 +320,6 @@ export default function App() {
                 <pre>{pretty(subjectList)}</pre>
               </div>
             )}
-            {toastEl}
           </div>
         </div>
 
@@ -327,7 +343,6 @@ export default function App() {
               Atualizar lista
             </button>
             <div className="small">Dica: a lista vem do Postgres (indexer + inserts do API).</div>
-            {toastEl}
           </div>
         </div>
       </div>
