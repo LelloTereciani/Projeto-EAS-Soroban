@@ -57,6 +57,8 @@ export default function App() {
 
   const [revokeId, setRevokeId] = useState('');
 
+  const [schemasList, setSchemasList] = useState<any>(null);
+
   const clearToastSoon = () => setTimeout(() => setToast(null), 3500);
 
   const toastEl = useMemo(() => {
@@ -329,10 +331,11 @@ export default function App() {
             <button
               onClick={async () => {
                 setToast(null);
+                setSchemasList(null);
                 try {
                   const out = await jfetch('/schemas');
+                  setSchemasList(out);
                   setToast({ kind: 'ok', msg: `Schemas: ${out.schemas?.length ?? 0}` });
-                  alert(pretty(out));
                 } catch (e: any) {
                   setToast({ kind: 'err', msg: `Erro: ${e.message}` });
                 } finally {
@@ -343,6 +346,11 @@ export default function App() {
               Atualizar lista
             </button>
             <div className="small">Dica: a lista vem do Postgres (indexer + inserts do API).</div>
+            {schemasList && (
+              <div className="small">
+                <pre>{pretty(schemasList)}</pre>
+              </div>
+            )}
           </div>
         </div>
       </div>
